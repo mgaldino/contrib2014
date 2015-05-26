@@ -7,6 +7,8 @@
 ## carregando bibliotecas
 library(XML)
 library(data.table)
+library(ggplot2)
+library(scales)
 
 # definindo diretorio
 setwd("D:\\2015\\Transparência\\dados externos\\prestacao_final_2014\\receita_candidato")
@@ -70,19 +72,21 @@ for (i in 1:length(nomeFiles1)) {
 }
 
 baseCandidatos <- do.call(rbind, lista)
-baseCandidatos <- subset(baseCandidatos, cargo != c("GOVERNADOR", "PRESIDENTE", "VICE-GOVERNADOR", "VICE-PRESIDENTE" ))
-baseContribCandidatos <- subset( baseContribCandidatos, Cargo != c("Governador", "Presidente"))
+
 
 head(baseContribCandidatos)
 head(baseCandidatos)
 names(baseCandidatos)[1] <-  "UF"
 base <- merge( baseCandidatos, baseContribCandidatos , by.x="CPF.do.candidato", by.y="CPF.do.candidato", all.x=T)
 
+base <- subset(base, cargo %in% c("DEPUTADO ESTADUAL", "DEPUTADO FEDERAL", "SENADOR", "DEPUTADO DISTRITAL", 
+                                "1º SUPLENTE", "2º SUPLENTE"))
+base$idade <- as.numeric(base$idade)
 base$receita[is.na(base$receita)] <- 0
 base1 <- as.data.table(base)
 
 base1[ , bolReceita := receita==0 ]
-analiseCompleta <- base1[ , list(receiaMedia =mean(receita ), numSemReceita=sum(bolreceita), totalCandidatos = length(unique(CPF.do.candidato)), totalCandidatos1 = length(CPF.do.candidato)), by=c("genero", "cor", "status_eleito", "UF.x", "cargo")]
+analiseCompleta <- base1[ , list(receiaMedia =mean(receita ), numSemReceita=sum(bolReceita), totalCandidatos = length(unique(CPF.do.candidato)), totalCandidatos1 = length(CPF.do.candidato)), by=c("genero", "cor", "status_eleito", "UF.x", "cargo")]
 
 analiseGenero <- base1[ , list(receitaMedia =mean(receita ), totalCandidatos = length(CPF.do.candidato)), by=c("genero", "bolReceita")]
 analiseGenero
@@ -94,3 +98,41 @@ analiseGeneroCargo <- base1[ , list(receitaMedia =mean(receita ), totalCandidato
 analiseGeneroCargo[order(analiseGeneroCargo$bolReceita, analiseGeneroCargo$cargo, analiseGeneroCargo$genero), ]
 
 
+### Gráficos
+setwd("D:/2015/Transparência/gráficos")
+
+## barra genero x cargo entre os que receberam doação
+baseCargos <- subset(analiseGeneroCargo, bolReceita==F)
+baseCargos$cargo <- gsub("deputado ", "", tolower(baseCargos$cargo))
+baseCargos$cargo <- gsub("federal", "fed", baseCargos$cargo)
+baseCargos$cargo <- gsub("estadual", "est", baseCargos$cargo)
+baseCargos$cargo <- gsub("distrital", "dist", baseCargos$cargo)
+baseCargos$cargo <- gsub("senador", "sen", baseCargos$cargo)
+
+baseCargos$genero <- gsub("MASCULINO", "Masc", baseCargos$genero)
+baseCargos$genero <- gsub("FEMININO", "Fem", baseCargos$genero)
+                          
+dodgewidth <- position_dodge(width=0.9)
+p <- ggplot(baseCargos, aes(genero, y=receitaMedia, fill=cargo) ) +
+  geom_bar(stat = "identity", position=dodgewidth)  + scale_fill_grey(start = 0.1, end = .9) + 
+  stat_identity(geom="text", position= dodgewidth, aes(x=genero, label=cargo), vjust=-1) +
+  scale_y_continuous(labels = dollar, limits=c(0, 1500000)) +theme_tb() + ylab("Receita Média") + xlab("")
+p
+ggsave(p, file="receita_genero_cargo_barra_V1.pdf", scale=2)
+
+p <- ggplot(baseCargos, aes(cargo, y=receitaMedia, fill=genero) ) +
+  geom_bar(stat = "identity", position=dodgewidth)  + scale_fill_grey(start = 0.1, end = .9, name="") + 
+  #stat_identity(geom="text", position= dodgewidth, aes(x=cargo, label=genero, size=12), vjust=-1) +
+  scale_y_continuous(labels = dollar, limits=c(0, 1500000)) +theme_tb(legenda="right") + ylab("Receita Média") + xlab("")
+p
+
+ggsave(p, file="receita_genero_cargo_barra_V2.pdf", scale=2)
+
+baseDepFed <- subset(base1, bolReceita==F &  Cargo=="Deputado Federal")
+
+p <- ggplot(baseDepFed, aes(idade, y=receita, label = as.character(genero))) +
+     geom_text(size = 3 , aes(colour=genero )) + scale_y_continuous(labels = dollar) +theme_tb()
+
+
+
+ggsave(p, file="receita_idade_genero.pdf", scale=2)
