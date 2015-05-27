@@ -1,6 +1,6 @@
 ## Theme for Tranasparência Brasil
 
-theme_tb <- function(base_size = 12, base_family = "calibri", legenda="none") {
+theme_tb <- function(base_size = 12, base_family = "calibri", legenda="none", dir.Legenda="horizontal") {
    theme(
      line = element_line(),
      axis.title = element_text(size=base_size),
@@ -9,13 +9,12 @@ theme_tb <- function(base_size = 12, base_family = "calibri", legenda="none") {
      axis.line = element_blank(),
      legend.background = element_rect(),
      legend.position = legenda,
-     legend.direction = "horizontal",
+     legend.direction = dir.Legenda,
      legend.box = "vertical",
      panel.grid = element_line(colour = NULL),
      panel.grid.major = element_blank(),
      panel.grid.minor = element_blank(),
      panel.background = element_blank(),
-     # unfortunately, can't mimic subtitles
      strip.background=element_rect())
 }
 
