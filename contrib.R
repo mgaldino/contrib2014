@@ -103,6 +103,8 @@ unique(analiseGeneroCargoStatosEleito$status_eleito)
 baseStatus <- subset(base1, bolReceita==F & status_eleito %in% c("ELEITO", "ELEITO POR QP", "ELEITO POR MÉDIA" ))
 baseStatus <- baseStatus[ , list(receitaMedia =mean(receita ), totalCandidatos = length(CPF.do.candidato)), by=c("genero", "bolReceita","cargo")]
 
+basereceitaTrue <- subset(base1, bolReceita==F)
+analiseGeneroUFCargo <- basereceitaTrue[ , list(receitaMedia =mean(receita ), totalCandidatos = length(CPF.do.candidato)), by=c("genero", "cargo", "UF")]
 
 # validacao
 setkey(base1, "cargo")
@@ -151,3 +153,8 @@ p <- ggplot(baseDepFed, aes(idade, y=receita, label = as.character(genero))) +
 p
 
 ggsave(p, file="receita_idade_genero.pdf", scale=2)
+
+## box plot
+basereceitaTrue
+p3 <- ggplot(basereceitaTrue, aes(x = UF, y = receita))
+p3 + geom_boxplot() + coord_flip() + facet_grid(genero ~ .)

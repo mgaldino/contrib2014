@@ -37,16 +37,21 @@ theme_hyper <- function(angle=0, fonte="arial", size=14) {
 
 remove_acento <- function(vec, Toupper=F) {
   vec <- tolower(vec)
-  vec <- gsub('?', 'a', vec) 
-  vec <- gsub('?', 'a', vec)
-  vec <- gsub('?', 'a', vec)
-  vec <- gsub('?', 'e', vec) 
-  vec <- gsub('?', 'e', vec)
-  vec <- gsub('?', 'i', vec)
-  vec <- gsub('?', 'o', vec) 
-  vec <- gsub('?', 'o', vec)
-  vec <- gsub('?', 'o', vec)
-  vec <- gsub('?', 'u', vec) 
+  vec <- gsub('aã', 'o', vec)
+  vec <- gsub('ã”', 'o', vec)
+  vec <- gsub('ãƒ', 'a', vec)
+  vec <- gsub('á', 'a', vec)
+  vec <- gsub('Ã', 'a', vec)
+  vec <- gsub('ã', 'a', vec)
+  vec <- gsub('â', 'a', vec)
+  vec <- gsub('é', 'e', vec) 
+  vec <- gsub('ê', 'e', vec)
+  vec <- gsub('í', 'i', vec)
+  vec <- gsub('ó', 'o', vec) 
+  vec <- gsub('ô', 'o', vec)
+  vec <- gsub('õ', 'o', vec)
+  vec <- gsub('ú', 'u', vec)
+  vec <- gsub('ç', 'c', vec)
   if ( Toupper==T) vec <- toupper(vec)
   return(vec)
 }
@@ -54,10 +59,10 @@ remove_acento <- function(vec, Toupper=F) {
 converte_uf <- function (df, uf, para_sigla=T) {
   
   UF_extenso = c('Distrito Federal',
-                 'Minas Gerais','Rio de Janeiro','S?o Paulo', 'Rio Grande do Norte',
-                 'Rio Grande do Sul','Mato Grosso do Sul','Mato Grosso', 'Paran?', 'Santa Catarina','Roraima', 
-                 'Amap?', 'Para?ba','Alagoas','Sergipe','Bahia','Pernambuco','Cear?','Par?',
-                 'Maranh?o','Amazonas','Acre','Rond?nia','Tocantins','Goi?s','Piau?','Esp?rito Santo')
+                 'Minas Gerais','Rio de Janeiro','São Paulo', 'Rio Grande do Norte',
+                 'Rio Grande do Sul','Mato Grosso do Sul','Mato Grosso', 'Paraná', 'Santa Catarina','Roraima', 
+                 'Amapá', 'Paraíba','Alagoas','Sergipe','Bahia','Pernambuco','Ceará','Pará',
+                 'Maranhão','Amazonas','Acre','Rondônia','Tocantins','Goiás','Piauí','Espírito Santo')
   
   UF_sigla = c('DF','MG', 'RJ', 'SP','RN', 'RS', "MS",
                "MT", 'PR', 'SC','RR', 'AP', 'PB','AL', 'SE', 'BA',
