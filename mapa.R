@@ -21,7 +21,7 @@ library(gpclib)
 
 ## carregando dados
 setwd()
-load()
+load(file="lonlat_v1.RData")
 
 
 lonlat <- matrix(NA, nrow=27, ncol=2)

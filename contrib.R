@@ -115,7 +115,7 @@ setkey(base1, "cargo")
 base1[ "sen", mean(receita), by=c("genero","bolReceita")]
 
 ### Gráficos
-setwd("D:/2015/Transparência/gráficos")
+setwd("D:/2015/TB/mulheres/contrib2014/graficos")
 
 ## barra genero x cargo entre os que receberam doação
 baseCargos <- subset(analiseGeneroCargo, bolReceita==F & !(cargo %in% c("1º SUPLENTE", "2º SUPLENTE")))
@@ -147,7 +147,7 @@ p <- ggplot(baseCargos, aes(cargo, y=receitaMedia, fill=genero) ) +
   scale_y_continuous(labels = dollar, limits=c(0, 1700000)) +theme_tb(legenda="right") + ylab("Receita Média") + xlab("")
 p
 
-ggsave(p, file="receita_genero_cargo_barra_V2.pdf", scale=2)
+ggsave(p, file="receita_genero_cargo_barra_V2.png", dpi=200,scale=2)
 
 baseDepFed <- subset(base1, bolReceita==F &  Cargo=="Deputado Federal")
 
