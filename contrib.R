@@ -5,7 +5,6 @@
 #######################################
 
 ## carregando bibliotecas
-library(XML)
 library(data.table)
 library(ggplot2)
 library(scales)
@@ -27,6 +26,9 @@ for (i in 1:length(nomeFiles)) {
 }
 
 baseContribCandidatos <- do.call(rbind, dfList1)
+
+rm(dfList1, dfList, nomeFiles)
+gc()
 
 head(baseContribCandidatos)
 baseContribCandidatos <- subset( baseContribCandidatos, !(Cargo %in% c("Governador", "Presidente")))
@@ -62,6 +64,8 @@ for (i in 1:length(nomeFiles1)) {
 
 baseCandidatos <- do.call(rbind, lista)
 
+rm(lista, nomeFiles1)
+gc()
 
 head(baseContribCandidatos)
 head(baseCandidatos)

@@ -74,6 +74,9 @@ serra <- subset(serra, select=c("Numero.Recibo.Eleitoral", "CPF.CNPJ.do.doador",
 
 View(serra)
 
+serraDT <- as.data.table(serra)
+serraDT$Valor.receita <- as.numeric(gsub(",", ".", serraDT$Valor.receita))
+serraDT[ , sum(Valor.receita), by=Nome.do.doador]
 
 serra1 <- serra[grepl("IGUATEMI", serra$Nome.do.doador.originário),]
 serra1$Valor.receita <- as.numeric(gsub(",", ".", serra1$Valor.receita))
@@ -145,3 +148,29 @@ iguatemi [ , sum(Valor.receita), by=c("Nome.do.doador")]
 
 sum(iguatemi$Valor.receita)
 
+
+## Despesas candidatos SP
+
+despesas_candidatos_2014_SP
+
+setwd("D:\\2015\\Transparência\\dados externos\\prestacao_final_2014")
+
+spDesp <- read.table("despesas_candidatos_2014_SP.txt", header=T, sep=";", colClasses= "character") 
+dim(spDesp)
+head(sp)
+names(spDesp)
+
+serraD <- subset(spDesp, CPF.do.candidato == "93565968834")
+
+
+View(serraD)
+
+serraD <- as.data.table(serraD)
+serraD$Valor.despesa <- as.numeric(gsub(",", ".", serraD$Valor.despesa))
+serraD[ , sum(Valor.despesa)]
+
+serra1 <- serra[grepl("IGUATEMI", serra$Nome.do.doador.originário),]
+serra1$Valor.receita <- as.numeric(gsub(",", ".", serra1$Valor.receita))
+
+View(serra1)
+sum(serra1$Valor.receita)
